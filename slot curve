@@ -1,0 +1,9 @@
+%lenth = input("slot length=")
+length = 138.11;
+x=linspace(0,138.11,20);
+cita= length/6;
+u = length/2;
+y = 1/(sqrt(2*pi)*cita)*exp(-((x-u).^2)/(2*cita^2));
+plot(x,y)
+
+t=0:138.11/200:138.11;
