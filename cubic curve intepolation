@@ -7,7 +7,7 @@ y = 1/(sqrt(2*pi)*cita)*exp(-((x-u).^2)/(2*cita^2));
 plot(x,y)
 xx=0:138.11/200:138.11;
 pp = csape(x,y,'periodic');  % 周期性边界条件三次样条拟合
-yy=ppval(pp,t);
+yy=ppval(pp,xx);
 plot(xx,yy,'b');
 
 
