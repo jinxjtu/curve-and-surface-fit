@@ -1,0 +1,28 @@
+%lenth = input("slot length=")
+length = 138.11;
+x=linspace(0,138.11,20);
+cita= length/6;
+u = length/2;
+y = 1/(sqrt(2*pi)*cita)*exp(-((x-u).^2)/(2*cita^2));
+plot(x,y)
+xx=0:138.11/200:138.11;
+pp = csape(x,y,'periodic');  % 周期性边界条件三次样条拟合
+yy=ppval(pp,t);
+plot(xx,yy,'b');
+
+
+%%%%%%%%写data文件
+
+fid=fopen('D:\01research\04slot\01slotdesigncode\slotcurve1.dat','w');
+[m,n]=size(xx);
+m=2*m;
+ for i=1:1:n
+    for j=1:1:m
+       if j==m
+         fprintf(fid,'%g\r\n',yy(1,i));
+      else
+        fprintf(fid,'%g\t',xx(1,i));
+       end
+    end
+end
+fclose(fid);
