@@ -1,8 +1,30 @@
+%% name the file
+dir1='M:\Desktop\WINDTUNNELwork\NUMERICAL_CALCULATION\SLOT\002contoured_slot\01slotcurve';
+dir2= 'Please enter the directory: ';
+Dir2=input(dir2,'s');
+
+%%% check if input, use the input directory; else, use the default directory
+inputcheck = 'Please enter the directory: ';
+if length(Dir2) ==  length(inputcheck)
+    if Dir2 == inputcheck
+       dir = dir1;
+    else
+       dir = Dir2;
+    end
+else
+    dir = Dir2;
+end
+prompt = 'Please enter the file name: ';
+fileName = input(prompt,'s');
+
+fullfilename=fullfile(dir,fileName);
+
+%%%%Gauss
 %lenth = input("slot length=")
-length = 138.11;
+slotlength = 138.11;
 x=linspace(0,138.11,20);
-cita= length/6;
-u = length/2;
+cita= slotlength/6;
+u = slotlength/2;
 y = 1/(sqrt(2*pi)*cita)*exp(-((x-u).^2)/(2*cita^2));
 plot(x,y)
 xx=0:138.11/200:138.11;
@@ -11,18 +33,27 @@ yy=ppval(pp,xx);
 plot(xx,yy,'b');
 
 
-%%%%%%%%写data文件
+%%%%%%%%write
 
-fid=fopen('D:\01research\04slot\01slotdesigncode\slotcurve1.dat','w');
-[m,n]=size(xx);
-m=2*m;
- for i=1:1:n
-    for j=1:1:m
-       if j==m
-         fprintf(fid,'%g\r\n',yy(1,i));
-      else
-        fprintf(fid,'%g\t',xx(1,i));
-       end
+fid=fopen(fullfilename,'w');
+if fid == -1
+  error('Cannot open file: %s', fileName);
+else
+ [m,n]=size(xx);
+  m=2*m;
+     for i=1:1:n
+        for j=1:1:m
+           if j==m
+             fprintf(fid,'%g\r\n',yy(1,i));
+          else
+            fprintf(fid,'%g\t',xx(1,i));
+           end
+        end
     end
+    fclose(fid);
+    
 end
-fclose(fid);
+
+
+
+
