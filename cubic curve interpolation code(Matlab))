@@ -1,3 +1,8 @@
+%% 09/04/2019 author:jinjin li
+%% generate a contour slot(only curve)
+clear;
+clc;
+
 %% name the file
 dir1='M:\Desktop\WINDTUNNELwork\NUMERICAL_CALCULATION\SLOT\002contoured_slot\01slotcurve';
 dir2= 'Please enter the directory: ';
@@ -20,39 +25,52 @@ fileName = input(prompt,'s');
 fullfilename=fullfile(dir,fileName);
 
 %%%%Gauss
+
+slotarea=138*4/sin(pi/4);%%% should be 138.11
+propotion=0.5;
 %lenth = input("slot length=")
 slotlength = 138.11;
+n_point = 200;
 x=linspace(0,138.11,20);
 cita= slotlength/6;
 u = slotlength/2;
-y = 1/(sqrt(2*pi)*cita)*exp(-((x-u).^2)/(2*cita^2));
-plot(x,y)
-xx=0:138.11/200:138.11;
-pp = csape(x,y,'periodic');  % 周期性边界条件三次样条拟合
+y1 = 1/(sqrt(2*pi)*cita)*exp(-((x-u).^2)/(2*cita^2));
+y= slotarea * propotion *y1 ;
+%plot(x,y)
+xx=0:slotlength/n_point:slotlength;
+pp = csape(x,y,'periodic');  % ?????????????
 yy=ppval(pp,xx);
-plot(xx,yy,'b');
+
+xxp = [xx-slotlength,xx,xx+slotlength];
+yyp = [yy,yy,yy];
+
+plot(xxp,yyp,'b');
 
 
 %%%%%%%%write
+ox = -15.82728;
+oy = -70.38535;
 
 fid=fopen(fullfilename,'w');
 if fid == -1
   error('Cannot open file: %s', fileName);
 else
- [m,n]=size(xx);
+ [m,n]=size(xxp);
   m=2*m;
      for i=1:1:n
         for j=1:1:m
            if j==m
-             fprintf(fid,'%g\r\n',yy(1,i));
+             fprintf(fid,'%g\t%g\r\n',xxp(1,i)+oy,0);%%x coordinate
           else
-            fprintf(fid,'%g\t',xx(1,i));
+            fprintf(fid,'%g\t',yyp(1,i)+ox);
            end
         end
     end
     fclose(fid);
     
 end
+
+
 
 
 
