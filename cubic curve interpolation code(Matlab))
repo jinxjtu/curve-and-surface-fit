@@ -1,10 +1,11 @@
-%% 09/04/2019 author:jinjin li
+%% 09/04/2019 author:Jinjin Li
+%%09/16/2019 revised by Jinjin Li
 %% generate a contour slot(only curve)
 clear;
 clc;
 
 %% name the file
-dir1='M:\Desktop\WINDTUNNELwork\NUMERICAL_CALCULATION\SLOT\002contoured_slot\01slotcurve';
+dir1='M:\Desktop\WINDTUNNELwork\NUMERICAL_CALCULATION\SLOT\002contoured_slot\01slotcurve\file_generated';
 dir2= 'Please enter the directory: ';
 Dir2=input(dir2,'s');
 
@@ -27,14 +28,14 @@ fullfilename=fullfile(dir,fileName);
 %%%%Gauss
 
 slotarea=138*4/sin(pi/4);%%% should be 138.11
-propotion=0.5;
+propotion=0.5;           %%%%%%  change proportion
 %lenth = input("slot length=")
 slotlength = 138.11;
 n_point = 200;
 x=linspace(0,138.11,20);
-cita= slotlength/6;
+sigma= slotlength/9;      %%%%%%% change the shape here
 u = slotlength/2;
-y1 = 1/(sqrt(2*pi)*cita)*exp(-((x-u).^2)/(2*cita^2));
+y1 = 1/(sqrt(2*pi)*sigma)*exp(-((x-u).^2)/(2*sigma^2));
 y= slotarea * propotion *y1 ;
 %plot(x,y)
 xx=0:slotlength/n_point:slotlength;
@@ -50,6 +51,7 @@ plot(xxp,yyp,'b');
 %%%%%%%%write
 ox = -15.82728;
 oy = -70.38535;
+y_adjust = 6;
 
 fid=fopen(fullfilename,'w');
 if fid == -1
@@ -60,18 +62,14 @@ else
      for i=1:1:n
         for j=1:1:m
            if j==m
-             fprintf(fid,'%g\t%g\r\n',xxp(1,i)+oy,0);%%x coordinate
+             fprintf(fid,'%g\t%g\r\n',xxp(1,i)+oy+y_adjust,0);%%x coordinate
           else
             fprintf(fid,'%g\t',yyp(1,i)+ox);
            end
         end
     end
     fclose(fid);
-    
 end
-
-
-
 
 
 
