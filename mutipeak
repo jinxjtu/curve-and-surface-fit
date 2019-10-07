@@ -1,0 +1,81 @@
+%% 09/04/2019 author:jinjin li
+%% generate a contour slot(only curve)
+clear;
+clc;
+
+%% name the file
+dir1='M:\Desktop\WINDTUNNELwork\NUMERICAL_CALCULATION\SLOT\002contoured_slot\01slotcurve\file_generated';
+dir2= 'Please enter the directory: ';
+Dir2=input(dir2,'s');
+
+%%% check if input, use the input directory; else, use the default directory
+inputcheck = 'Please enter the directory: ';
+if length(Dir2) ==  length(inputcheck)
+    if Dir2 == inputcheck
+       dir = dir1;
+    else
+       dir = Dir2;
+    end
+else
+    dir = Dir2;
+end
+prompt = 'Please enter the file name: ';
+fileName = input(prompt,'s');
+
+
+fullfilename=fullfile(dir,fileName);
+
+%%%%Gauss
+
+slotarea=138*4/sin(pi/4);%%% should be 138.11
+propotion=0.7;           %%%%%%  change proportion
+%lenth = input("slot length=")
+slotlength = 138.11;
+n_point = 200;
+x=linspace(0,138.11,20);
+sigma= 5*slotlength/36;      %%%%%%% change the shape here
+u = slotlength/2;
+y1 = 1/(sqrt(2*pi)*sigma)*exp(-((x-u).^2)/(2*sigma^2));
+y= slotarea * propotion *y1 ;
+%plot(x,y)
+xx=0:slotlength/n_point:slotlength;
+pp = csape(x,y,'periodic');  % ?????????????
+yy=ppval(pp,xx);
+
+xxp = [xx-3*slotlength,xx-2*slotlength,xx-slotlength,xx,xx+slotlength,xx+2*slotlength]/2;
+yyp = [yy,yy,yy,yy,yy,yy];
+
+plot(xxp,yyp,'b');
+
+
+%%%%%%%%write
+ox = -23.303218;
+oy = -64.53214;  %%%%%%%%%refrence distance, changes according proportion  
+                 %%%%%%%%%   for 0.5,  ox = -15.82728;oy = -70.38535;
+                 %%%%%%%%%   for 0.4, ox = -22.17218;oy = -64.53214;
+                 %%%%%%%%%   for 0.6, ox = -22.17218;oy = -64.53214;
+
+fid=fopen(fullfilename,'w');
+if fid == -1
+  error('Cannot open file: %s', fileName);
+else
+ [m,n]=size(xxp);
+  m=2*m;
+     for i=1:1:n
+        for j=1:1:m
+           if j==m
+             fprintf(fid,'%g\t%g\r\n',xxp(1,i)+oy,0);%%y coordinate
+           else
+             fprintf(fid,'%g\t',yyp(1,i)+ox);
+           end
+        end
+    end
+    fclose(fid);
+end
+
+
+
+%%%%%M:\Desktop\WINDTUNNELwork\NUMERICAL_CALCULATION\SLOT\002contoured_slot\01slotcurve\file_generated\proportion7by10
+%%%%%ContourSlot_LeadingEdgePoint_portion7by10_SigmaLby9.dat
+
+
